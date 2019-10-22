@@ -21,6 +21,7 @@ class Weather {
         String icon;
     }
 
+
     static class Main {
         float temp;
         int pressure;

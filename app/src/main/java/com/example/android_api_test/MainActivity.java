@@ -25,6 +25,13 @@ public class MainActivity extends Activity {
                     .setPositiveButton(android.R.string.yes, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
+            finish();
+            System.exit(0);
+            loadWeatherData();
         }
+    }
+
+    protected void loadWeatherData() {
+
     }
 }
