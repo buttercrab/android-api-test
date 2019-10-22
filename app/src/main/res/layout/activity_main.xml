@@ -23,7 +23,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="08:06"
+                android:text="@string/_08_06"
+                android:fontFamily="@font/lobster"
                 android:textSize="50sp" />
 
             <TextView
@@ -32,7 +33,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/black"
-                android:text="2019/10/22" />
+                android:fontFamily="@font/lobster"
+                android:paddingLeft="10dp"
+                android:text="@string/_2019_10_22" />
         </LinearLayout>
 
     </LinearLayout>
