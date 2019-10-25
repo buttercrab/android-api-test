@@ -5,12 +5,31 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends Activity {
 
     LocationManager locationManager;
+
+    TextView time, date;
+
+    Handler updateTime = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            Calendar calendar = Calendar.getInstance();
+            time.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
+            date.setText(String.format("%d/%d/%d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)));
+            sendEmptyMessageDelayed(1, 100);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +52,9 @@ public class MainActivity extends Activity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
+        time = findViewById(R.id.current_time);
+        date = findViewById(R.id.current_date);
+        updateTime.sendEmptyMessage(1);
         loadWeatherData();
     }
 
