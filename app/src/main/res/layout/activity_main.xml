@@ -29,7 +29,7 @@
 
             <TextView
                 android:id="@+id/current_date"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/black"
@@ -37,6 +37,14 @@
                 android:paddingLeft="10dp"
                 android:text="@string/_2019_10_22" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weather"
+            android:textSize="50sp"
+            android:fontFamily="@font/lobster"
+            android:textColor="@color/green"/>
 
     </LinearLayout>
 </ScrollView>
