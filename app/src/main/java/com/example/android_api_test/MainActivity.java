@@ -1,8 +1,11 @@
 package com.example.android_api_test;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,7 +25,31 @@ public class MainActivity extends Activity {
 
     TextView time, date;
 
+    private class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            loadWeatherData(location);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    }
+
     Handler updateTime = new Handler(Looper.getMainLooper()) {
+        @SuppressLint({"DefaultLocale", "SetTextI18n"})
         @Override
         public void handleMessage(Message msg) {
             Calendar calendar = Calendar.getInstance();
@@ -31,6 +59,7 @@ public class MainActivity extends Activity {
         }
     };
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +84,16 @@ public class MainActivity extends Activity {
         time = findViewById(R.id.current_time);
         date = findViewById(R.id.current_date);
         updateTime.sendEmptyMessage(1);
-        loadWeatherData();
+        LocationListener locationListener = new MyLocationListener();
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
     }
 
-    protected void loadWeatherData() {
+    protected void loadWeatherData(Location loc) {
+        try {
+            Weather weather = GetWeather.getWeather((float)loc.getLatitude(), (float)loc.getAltitude());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
