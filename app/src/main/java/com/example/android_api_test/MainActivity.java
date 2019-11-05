@@ -49,8 +49,8 @@ public class MainActivity extends Activity {
 
         @Override
         public void onProviderDisabled(String provider) {
-            new AlertDialog.Builder(this.context)
-                    .setTitle("GPS Lost Connection")
+            new AlertDialog.Builder(context)
+                    .setTitle("GPS Disabled")
                     .setMessage("Please Turn on your GPS to get weather information of your location.")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
@@ -65,6 +65,7 @@ public class MainActivity extends Activity {
     }
 
     LocationManager locationManager;
+    MyLocationListener locationListener;
 
     TextView time, date, temp, minmaxtemp;
     RecyclerView forecast;
@@ -112,18 +113,21 @@ public class MainActivity extends Activity {
 
         updateTime.sendEmptyMessage(1);
 
-        LocationListener locationListener = new MyLocationListener(this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10,
+        locationListener = new MyLocationListener(this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10,
                 locationListener);
     }
 
+    @SuppressLint("DefaultLocale")
     protected void loadWeatherData(Location loc) {
         try {
             Weather weather = GetWeather.getWeather((float)loc.getLatitude(), (float)loc.getAltitude());
-            temp.setText(String.format("%.1f°C", weather.main.temp));
-            minmaxtemp.setText(String.format("%.1f°C/%.1f°C", weather.main.temp_min, weather.main.temp_max));
-
-
+            float t, mint, maxt;
+            t = weather.main.temp;
+            mint = weather.main.temp_min;
+            maxt = weather.main.temp_max;
+            temp.setText(String.format("%.1f°C", t));
+            minmaxtemp.setText(String.format("%.1f°C/%.1f°C", mint, maxt));
         } catch (IOException e) {
             e.printStackTrace();
         }

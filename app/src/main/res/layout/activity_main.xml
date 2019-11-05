@@ -35,7 +35,9 @@
                 android:textColor="@color/black"
                 android:fontFamily="@font/lobster"
                 android:paddingLeft="10dp"
-                android:text="@string/_2019_10_22" />
+                android:text="@string/_2019_10_22"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"/>
         </LinearLayout>
 
         <TextView
@@ -49,11 +51,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
+            android:gravity="center">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="@string/cloudy"
+                android:src="@drawable/clouds"
+                android:layout_marginRight="20dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -83,11 +88,11 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/weather_forecast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/weather_forecast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"/>
 
     </LinearLayout>
 

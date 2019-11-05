@@ -2,7 +2,8 @@
     <string name="app_name">android-api-test</string>
     <string name="_08_06">08:06</string>
     <string name="_2019_10_22">2019/10/22</string>
-    <string name="temperature">16°C</string>
+    <string name="temperature">16°C </string>
     <string name="weather">Weather</string>
     <string name="_9_c_18_c">9°C/18°C</string>
+    <string name="cloudy">Cloudy</string>
 </resources>
