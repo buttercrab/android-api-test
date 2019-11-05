@@ -67,17 +67,27 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lobster"
                     android:text="@string/temperature"
+                    android:textColor="@color/red"
                     android:textSize="60sp" />
 
                 <TextView
-                        android:id="@+id/minmaxtemp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/lobster"
-                        android:text="9°C/18°C"
-                        android:textSize="25sp"/>
+                    android:id="@+id/minmaxtemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lobster"
+                    android:textColor="@color/gray"
+                    android:text="@string/_9_c_18_c"
+                    android:textSize="25sp"/>
+
             </LinearLayout>
+
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/weather_forecast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
 
     </LinearLayout>
 
