@@ -2,7 +2,6 @@ package com.example.android_api_test;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends Activity {
 
