@@ -43,11 +43,25 @@ class CurrentWeatherData {
     }
 }
 
-class HourlyForecastData {
+class ForecastData {
+    City city;
+    Coord coord;
+    String country;
+    int timezone;
     String cod;
     int message;
     int cnt;
     List[] list;
+
+    public static class City {
+        int id;
+        String name;
+    }
+
+    public static class Coord {
+        float lon;
+        float lat;
+    }
 
     public static class List {
         String dt;
@@ -116,8 +130,8 @@ public class OpenWeatherAPI {
         return gson.fromJson(data, CurrentWeatherData.class);
     }
 
-    public static HourlyForecastData getHourlyForecastData(float lat, float lon) throws IOException {
-        URL url = new URL("https://api.openweathermap.org/data/2.5/forecast/hourly?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
+    public static ForecastData getForecastData(float lat, float lon) throws IOException {
+        URL url = new URL("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
         con.setRequestMethod("GET");
@@ -125,7 +139,7 @@ public class OpenWeatherAPI {
         String data = br.readLine();
 
         Gson gson = new Gson();
-        return gson.fromJson(data, HourlyForecastData.class);
+        return gson.fromJson(data, ForecastData.class);
     }
 
     public static void main(String[] args) {
@@ -134,6 +148,15 @@ public class OpenWeatherAPI {
             CurrentWeatherData currentWeatherData = getCurrentWeatherData(lat, lon);
             Gson gson = new Gson();
             System.out.println(gson.toJson(currentWeatherData));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ForecastData forecastData = getForecastData(lat, lon);
+            Gson gson = new Gson();
+            System.out.println(gson.toJson(forecastData));
+            System.out.println(forecastData.list.length);
         } catch (IOException e) {
             e.printStackTrace();
         }

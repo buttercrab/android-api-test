@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends Activity {
 
