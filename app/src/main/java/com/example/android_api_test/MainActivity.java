@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 
     LocationManager locationManager;
 
-    TextView time, date;
+    TextView time, date, temp, minmaxtemp;
 
     private class MyLocationListener implements LocationListener {
 
@@ -83,6 +83,8 @@ public class MainActivity extends Activity {
         }
         time = findViewById(R.id.current_time);
         date = findViewById(R.id.current_date);
+        temp = findViewById(R.id.temp);
+        minmaxtemp = findViewById(R.id.minmaxtemp);
         updateTime.sendEmptyMessage(1);
         LocationListener locationListener = new MyLocationListener();
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
@@ -91,6 +93,8 @@ public class MainActivity extends Activity {
     protected void loadWeatherData(Location loc) {
         try {
             Weather weather = GetWeather.getWeather((float)loc.getLatitude(), (float)loc.getAltitude());
+            temp.setText(String.format("%.1f°C", weather.main.temp));
+            minmaxtemp.setText(String.format("%.1f°C/%.1f°C", weather.main.temp_min, weather.main.temp_max));
         } catch (IOException e) {
             e.printStackTrace();
         }
