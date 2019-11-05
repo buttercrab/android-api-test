@@ -58,6 +58,7 @@
                 android:layout_height="100dp"
                 android:contentDescription="@string/cloudy"
                 android:src="@drawable/clouds"
+                android:id="@+id/weather_icon"
                 android:layout_marginRight="20dp"/>
 
             <LinearLayout
