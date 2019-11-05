@@ -98,12 +98,13 @@ class HourlyForecastData {
 
 public class OpenWeatherAPI {
 
+    private static String api_key = "b00bccf2cfe104ad03e1ce916fe12cab";
+
     public static String getIconURL(String icon) {
         return "http://openweathermap.org/img/wn/" + icon + "@2x.png";
     }
 
     public static CurrentWeatherData getCurrentWeatherData(float lat, float lon) throws IOException {
-        String api_key = "b00bccf2cfe104ad03e1ce916fe12cab";
         URL url = new URL("https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -116,7 +117,6 @@ public class OpenWeatherAPI {
     }
 
     public static HourlyForecastData getHourlyForecastData(float lat, float lon) throws IOException {
-        String api_key = "b00bccf2cfe104ad03e1ce916fe12cab";
         URL url = new URL("https://api.openweathermap.org/data/2.5/forecast/hourly?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -126,5 +126,16 @@ public class OpenWeatherAPI {
 
         Gson gson = new Gson();
         return gson.fromJson(data, HourlyForecastData.class);
+    }
+
+    public static void main(String[] args) {
+        float lat = 37.532600f, lon = 127.024612f;
+        try {
+            CurrentWeatherData currentWeatherData = getCurrentWeatherData(lat, lon);
+            Gson gson = new Gson();
+            System.out.println(gson.toJson(currentWeatherData));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
