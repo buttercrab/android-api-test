@@ -3,6 +3,7 @@ package com.example.android_api_test;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -14,6 +15,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -31,6 +33,8 @@ public class MainActivity extends Activity {
     TextView time, date, temp, minmaxtemp;
     ImageView weather_icon;
     RecyclerView forecast;
+
+    Context main;
 
     Handler updateTime = new Handler(Looper.getMainLooper()) {
         @SuppressLint({"DefaultLocale", "SetTextI18n"})
@@ -50,6 +54,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        main = this;
+
         time = findViewById(R.id.current_time);
         date = findViewById(R.id.current_date);
         temp = findViewById(R.id.temp);
@@ -64,6 +70,9 @@ public class MainActivity extends Activity {
             public void onLocationChanged(Location location) {
                 double lat = location.getLatitude();
                 double lon = location.getLongitude();
+                Toast toast = Toast.makeText(getApplicationContext(), "lat: " + lat + ", lon: " + lon,
+                        Toast.LENGTH_LONG);
+                toast.show();
                 try {
                     CurrentWeatherData weather = OpenWeatherAPI.getCurrentWeatherData((float)lat, (float)lon);
                     float t = weather.main.temp;
