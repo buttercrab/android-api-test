@@ -124,7 +124,6 @@ public class MainActivity extends Activity {
                         .create()
                         .show();
 
-
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
@@ -158,12 +157,23 @@ public class MainActivity extends Activity {
                     }
 
                 } else {
-
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-
+                    new AlertDialog.Builder(this)
+                            .setTitle("GPS service denied")
+                            .setMessage("GPS service is essential to our app. Please enable GPS service to continue " +
+                                    "this app.")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                    System.exit(0);
+                                }
+                            })
+                            .create()
+                            .show();
                 }
-                return;
             }
 
         }
