@@ -89,11 +89,19 @@
 
         </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/weather_forecast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/refresh"
+            android:text="@string/refresh"
+            android:layout_gravity="center" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/weather_forecast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
 
     </LinearLayout>
 

@@ -1,25 +1,17 @@
 package com.example.android_api_test;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
@@ -27,12 +19,12 @@ import java.util.Calendar;
 
 public class MainActivity extends Activity {
 
-    LocationManager locationManager;
-    LocationListener locationListener;
-
     TextView time, date, temp, minmaxtemp;
     ImageView weather_icon;
     RecyclerView forecast;
+    Button refresh;
+
+    GPSTracker gpsTracker;
 
     Context main;
 
@@ -55,136 +47,44 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         main = this;
+        gpsTracker = new GPSTracker(main);
 
         time = findViewById(R.id.current_time);
         date = findViewById(R.id.current_date);
         temp = findViewById(R.id.temp);
         minmaxtemp = findViewById(R.id.minmaxtemp);
+        refresh = findViewById(R.id.refresh);
         forecast = findViewById(R.id.weather_forecast);
         weather_icon = findViewById(R.id.weather_icon);
 
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadWeatherData();
+            }
+        });
+
         updateTime.sendEmptyMessage(1);
-
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                double lat = location.getLatitude();
-                double lon = location.getLongitude();
-                Toast toast = Toast.makeText(getApplicationContext(), "lat: " + lat + ", lon: " + lon,
-                        Toast.LENGTH_LONG);
-                toast.show();
-                try {
-                    CurrentWeatherData weather = OpenWeatherAPI.getCurrentWeatherData((float)lat, (float)lon);
-                    float t = weather.main.temp;
-                    float mint = weather.main.temp_min;
-                    float maxt = weather.main.temp_max;
-                    temp.setText(String.format("%.1f°C", t));
-                    minmaxtemp.setText(String.format("%.1f°C/%.1f°C", mint, maxt));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-        checkLocationPermission();
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    protected void loadWeatherData() {
+        gpsTracker.loadLocation();
+        double lat = gpsTracker.getLatitude();
+        double lon = gpsTracker.getLongitude();
+        CurrentWeatherData currentWeather;
 
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(this)
-                        .setTitle("GPS Requirement")
-                        .setMessage("This app needs GPS service from your device. Please enable your GPS service to " +
-                                "continue using this app")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(MainActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION);
-                            }
-                        })
-                        .create()
-                        .show();
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
+        try {
+            currentWeather = OpenWeatherAPI.getCurrentWeatherData((float)lat, (float)lon);
+        } catch (IOException e) {
+            e.printStackTrace();
+            onError();
+            return;
         }
+        temp.setText(String.format("%.1f°C", currentWeather.main.temp));
+        minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min, currentWeather.main.temp_max));
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    protected void onError() {
 
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-
-                        //Request location updates:
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, locationListener);
-
-                    }
-
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    new AlertDialog.Builder(this)
-                            .setTitle("GPS service denied")
-                            .setMessage("GPS service is essential to our app. Please enable GPS service to continue " +
-                                    "this app.")
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    finish();
-                                    System.exit(0);
-                                }
-                            })
-                            .create()
-                            .show();
-                }
-            }
-
-        }
     }
 }
