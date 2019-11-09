@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 public class MainActivity extends Activity {
@@ -19,6 +22,7 @@ public class MainActivity extends Activity {
     TextView time, date, temp, minmaxtemp;
     ImageView weather_icon;
     RecyclerView forecast;
+    Button refresh;
 
     GPSTracker gpsTracker;
 
@@ -49,19 +53,38 @@ public class MainActivity extends Activity {
         date = findViewById(R.id.current_date);
         temp = findViewById(R.id.temp);
         minmaxtemp = findViewById(R.id.minmaxtemp);
+        refresh = findViewById(R.id.refresh);
         forecast = findViewById(R.id.weather_forecast);
         weather_icon = findViewById(R.id.weather_icon);
 
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadWeatherData();
+            }
+        });
+
         updateTime.sendEmptyMessage(1);
-        loadWeatherData();
     }
 
     protected void loadWeatherData() {
         gpsTracker.loadLocation();
         double lat = gpsTracker.getLatitude();
         double lon = gpsTracker.getLongitude();
+        CurrentWeatherData currentWeather;
 
-        CurrentWeatherData currentWeather = OpenWeatherAPI.getCurrentWeatherData((float)lat, (float)lon);
+        try {
+            currentWeather = OpenWeatherAPI.getCurrentWeatherData((float)lat, (float)lon);
+        } catch (IOException e) {
+            e.printStackTrace();
+            onError();
+            return;
+        }
+        temp.setText(String.format("%.1f°C", currentWeather.main.temp));
+        minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min, currentWeather.main.temp_max));
+    }
+
+    protected void onError() {
 
     }
 }

@@ -6,4 +6,5 @@
     <string name="weather">Weather</string>
     <string name="_9_c_18_c">9°C/18°C</string>
     <string name="cloudy">Cloudy</string>
+    <string name="refresh">Refresh</string>
 </resources>
