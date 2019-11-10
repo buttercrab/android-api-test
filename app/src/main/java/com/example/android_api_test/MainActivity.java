@@ -83,8 +83,4 @@ public class MainActivity extends Activity {
 
         OpenWeatherAPI.getCurrentWeather((float)lat, (float)lon, updateWeather);
     }
-
-    protected void onError() {
-
-    }
 }
