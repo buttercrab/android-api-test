@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
             temp.setText(String.format("%.1f°C", currentWeather.main.temp - 273.15));
             minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min - 273.15,
                     currentWeather.main.temp_max - 273.15));
+            new DownloadImageTask((ImageView) findViewById(R.id.weather_icon)).execute(OpenWeatherAPI.getIconURL(currentWeather.weather[0].icon));
         }
     };
 
@@ -82,6 +83,6 @@ public class MainActivity extends Activity {
         double lat = gpsTracker.getLatitude();
         double lon = gpsTracker.getLongitude();
 
-        OpenWeatherAPI.getCurrentWeather((float)lat, (float)lon, updateWeather);
+        OpenWeatherAPI.getCurrentWeather((float) lat, (float) lon, updateWeather);
     }
 }
