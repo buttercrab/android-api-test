@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
 import java.util.Calendar;
 
 public class MainActivity extends Activity {
@@ -37,6 +36,14 @@ public class MainActivity extends Activity {
             date.setText(String.format("%d/%d/%d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH)));
             sendEmptyMessageDelayed(1, 100);
+        }
+    };
+
+    Handler updateWeather = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            CurrentWeatherData currentWeather = (CurrentWeatherData) msg.obj;
+            temp.setText(String.format("%.1f°C", currentWeather.main.temp));
+            minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min, currentWeather.main.temp_max));
         }
     };
 
@@ -71,17 +78,8 @@ public class MainActivity extends Activity {
         gpsTracker.loadLocation();
         double lat = gpsTracker.getLatitude();
         double lon = gpsTracker.getLongitude();
-        CurrentWeatherData currentWeather;
 
-        try {
-            currentWeather = OpenWeatherAPI.getCurrentWeatherData((float)lat, (float)lon);
-        } catch (IOException e) {
-            e.printStackTrace();
-            onError();
-            return;
-        }
-        temp.setText(String.format("%.1f°C", currentWeather.main.temp));
-        minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min, currentWeather.main.temp_max));
+        OpenWeatherAPI.getCurrentWeather((float)lat, (float)lon, updateWeather);
     }
 
     protected void onError() {

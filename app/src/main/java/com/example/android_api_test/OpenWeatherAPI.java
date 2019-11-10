@@ -1,6 +1,7 @@
 package com.example.android_api_test;
 
 import android.os.Handler;
+import android.os.Message;
 
 import com.google.gson.Gson;
 
@@ -134,14 +135,9 @@ public class OpenWeatherAPI {
 
                             Gson gson = new Gson();
                             final CurrentWeatherData weatherData = gson.fromJson(data, CurrentWeatherData.class);
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    float temp = weatherData.main.temp;
-
-                                    // Change UI
-                                }
-                            });
+                            Message message = new Message();
+                            message.obj = weatherData;
+                            handler.sendMessage(message);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -165,14 +161,9 @@ public class OpenWeatherAPI {
 
                             Gson gson = new Gson();
                             final ForecastData forecastData = gson.fromJson(data, ForecastData.class);
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    int size = forecastData.cnt;
-
-                                    // Change UI
-                                }
-                            });
+                            Message message = new Message();
+                            message.obj = forecastData;
+                            handler.sendMessage(message);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
