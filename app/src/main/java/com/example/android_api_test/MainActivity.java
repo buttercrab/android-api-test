@@ -40,10 +40,12 @@ public class MainActivity extends Activity {
     };
 
     Handler updateWeather = new Handler(Looper.getMainLooper()) {
+        @SuppressLint("DefaultLocale")
         public void handleMessage(Message msg) {
             CurrentWeatherData currentWeather = (CurrentWeatherData) msg.obj;
-            temp.setText(String.format("%.1f°C", currentWeather.main.temp));
-            minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min, currentWeather.main.temp_max));
+            temp.setText(String.format("%.1f°C", currentWeather.main.temp - 273.15));
+            minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min - 273.15,
+                    currentWeather.main.temp_max - 273.15));
         }
     };
 
