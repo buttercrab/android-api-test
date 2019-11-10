@@ -117,7 +117,7 @@ public class OpenWeatherAPI {
     private static String api_key = "b00bccf2cfe104ad03e1ce916fe12cab";
 
     public static String getIconURL(String icon) {
-        return "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+        return "https://openweathermap.org/img/wn/" + icon + "@2x.png";
     }
 
     public static void getCurrentWeather(final double lat, final double lon, final Handler handler) {
