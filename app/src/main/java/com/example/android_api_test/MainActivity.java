@@ -2,7 +2,6 @@ package com.example.android_api_test;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Calendar;
@@ -24,8 +24,6 @@ public class MainActivity extends Activity {
     Button refresh;
 
     GPSTracker gpsTracker;
-
-    Context main;
 
     Handler updateTime = new Handler(Looper.getMainLooper()) {
         @SuppressLint({"DefaultLocale", "SetTextI18n"})
@@ -55,8 +53,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        main = this;
-        gpsTracker = new GPSTracker(main);
+        gpsTracker = new GPSTracker(this);
+
+        LinearLayoutManager forecastManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         time = findViewById(R.id.current_time);
         date = findViewById(R.id.current_date);
@@ -72,6 +71,7 @@ public class MainActivity extends Activity {
                 loadWeatherData();
             }
         });
+        forecast.setLayoutManager(forecastManager);
 
         updateTime.sendEmptyMessage(1);
         loadWeatherData();
