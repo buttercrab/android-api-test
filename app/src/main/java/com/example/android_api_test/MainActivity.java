@@ -74,6 +74,7 @@ public class MainActivity extends Activity {
         });
 
         updateTime.sendEmptyMessage(1);
+        loadWeatherData();
     }
 
     protected void loadWeatherData() {
