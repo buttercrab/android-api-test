@@ -1,9 +1,10 @@
 package com.example.android_api_test;
 
+import android.os.Handler;
+
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -118,47 +119,65 @@ public class OpenWeatherAPI {
         return "http://openweathermap.org/img/wn/" + icon + "@2x.png";
     }
 
-    public static CurrentWeatherData getCurrentWeatherData(float lat, float lon) throws IOException {
-        URL url = new URL("https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+    public static void getCurrentWeather(final double lat, final double lon, final Handler handler) {
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            URL url = new URL("https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
+                            HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-        con.setRequestMethod("GET");
-        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String data = br.readLine();
+                            con.setRequestMethod("GET");
+                            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                            String data = br.readLine();
 
-        Gson gson = new Gson();
-        return gson.fromJson(data, CurrentWeatherData.class);
+                            Gson gson = new Gson();
+                            final CurrentWeatherData weatherData = gson.fromJson(data, CurrentWeatherData.class);
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    float temp = weatherData.main.temp;
+
+                                    // Change UI
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).start();
     }
 
-    public static ForecastData getForecastData(float lat, float lon) throws IOException {
-        URL url = new URL("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+    public static void getForecast(final double lat, final double lon, final Handler handler) {
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            URL url = new URL("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
+                            HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-        con.setRequestMethod("GET");
-        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String data = br.readLine();
+                            con.setRequestMethod("GET");
+                            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                            String data = br.readLine();
 
-        Gson gson = new Gson();
-        return gson.fromJson(data, ForecastData.class);
-    }
+                            Gson gson = new Gson();
+                            final ForecastData forecastData = gson.fromJson(data, ForecastData.class);
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int size = forecastData.cnt;
 
-    public static void main(String[] args) {
-        float lat = 37.532600f, lon = 127.024612f;
-        try {
-            CurrentWeatherData currentWeatherData = getCurrentWeatherData(lat, lon);
-            Gson gson = new Gson();
-            System.out.println(gson.toJson(currentWeatherData));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            ForecastData forecastData = getForecastData(lat, lon);
-            Gson gson = new Gson();
-            System.out.println(gson.toJson(forecastData));
-            System.out.println(forecastData.list.length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                                    // Change UI
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
     }
 }
