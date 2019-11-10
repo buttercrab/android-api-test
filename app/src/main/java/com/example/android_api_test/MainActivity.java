@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             Calendar calendar = Calendar.getInstance();
-            time.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
+            time.setText(String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
             date.setText(String.format("%d/%d/%d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH)));
             sendEmptyMessageDelayed(1, 100);
