@@ -67,9 +67,23 @@ public class GPSTracker extends Service implements LocationListener {
             } else {
                 this.canGetLocation = true;
                 if (isGPSEnabled) {
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions((Activity) mContext,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                1);
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // Permission is not granted
+                        // Should we show an explanation?
+                        if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext,
+                                Manifest.permission.READ_CONTACTS)) {
+                            // Show an explanation to the user *asynchronously* -- don't block
+                            // this thread waiting for the user's response! After the user
+                            // sees the explanation, try again to request the permission.
+                        } else {
+                            // No explanation needed; request the permission
+                            ActivityCompat.requestPermissions((Activity) mContext,
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+                            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                            // app-defined int constant. The callback method gets the
+                            // result of the request.
+                        }
                     }
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
                     if (locationManager != null) {
