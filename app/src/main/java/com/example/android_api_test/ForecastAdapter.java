@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder> {
@@ -42,7 +43,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     @Override
     public void onBindViewHolder(@NonNull ForecastViewHolder holder, int position) {
         try {
-            holder.time.setText(dataset.get(position).getDate().toString());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
+            holder.time.setText(dateFormat.format(dataset.get(position).getDate()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
