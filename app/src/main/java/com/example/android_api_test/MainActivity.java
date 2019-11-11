@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class MainActivity extends Activity {
@@ -22,6 +24,9 @@ public class MainActivity extends Activity {
     ImageView weather_icon;
     RecyclerView forecast;
     Button refresh;
+
+    ArrayList <ForecastData.List> data;
+    ForecastAdapter forecastAdapter;
 
     GPSTracker gpsTracker;
 
@@ -48,6 +53,15 @@ public class MainActivity extends Activity {
         }
     };
 
+    Handler updateForecast = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            ForecastData forecastData = (ForecastData) msg.obj;
+            data.clear();
+            data.addAll(Arrays.asList(forecastData.list));
+            forecastAdapter.notifyDataSetChanged();
+        }
+    };
+
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +69,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         gpsTracker = new GPSTracker(this);
+        data = new ArrayList<>();
 
         LinearLayoutManager forecastManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        forecastAdapter = new ForecastAdapter(data);
 
         time = findViewById(R.id.current_time);
         date = findViewById(R.id.current_date);
@@ -73,6 +89,7 @@ public class MainActivity extends Activity {
             }
         });
         forecast.setLayoutManager(forecastManager);
+        forecast.setAdapter(forecastAdapter);
 
         updateTime.sendEmptyMessage(1);
         loadWeatherData();
@@ -84,5 +101,6 @@ public class MainActivity extends Activity {
         double lon = gpsTracker.getLongitude();
 
         OpenWeatherAPI.getCurrentWeather((float) lat, (float) lon, updateWeather);
+        OpenWeatherAPI.getForecast(lat, lon, updateForecast);
     }
 }
