@@ -57,7 +57,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:contentDescription="@string/cloudy"
-                android:src="@drawable/clouds"
+                android:src="@drawable/cloud"
                 android:id="@+id/weather_icon"
                 android:layout_marginRight="20dp"/>
 
@@ -101,7 +101,6 @@
             android:id="@+id/weather_forecast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="horizontal"
             android:layout_margin="10dp"/>
 
     </LinearLayout>
