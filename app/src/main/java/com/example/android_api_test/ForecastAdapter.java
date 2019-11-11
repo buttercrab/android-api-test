@@ -48,7 +48,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        holder.temp.setText(String.format("%s°", (int)dataset.get(position).main.temp));
+        holder.temp.setText(String.format("%s°", (int) dataset.get(position).main.temp - 273));
         new DownloadImageTask(holder.icon).execute(OpenWeatherAPI.getIconURL(dataset.get(position).weather[0].icon));
     }
 
