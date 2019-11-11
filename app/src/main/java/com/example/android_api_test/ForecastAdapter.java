@@ -1,5 +1,7 @@
 package com.example.android_api_test;
 
+import android.graphics.Bitmap;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder> {
-    private ArrayList<ForecastData.List> dataset;
+    private ArrayList<Pair<ForecastData.List, Bitmap>> dataset;
 
-    public ForecastAdapter(ArrayList<ForecastData.List> list) {
+    public ForecastAdapter(ArrayList<Pair<ForecastData.List, Bitmap>> list) {
         dataset = list;
     }
 
@@ -44,12 +46,19 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     public void onBindViewHolder(@NonNull ForecastViewHolder holder, int position) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
-            holder.time.setText(dateFormat.format(dataset.get(position).getDate()));
+            holder.time.setText(dateFormat.format(dataset.get(position).first.getDate()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        holder.temp.setText(String.format("%s°", (int) dataset.get(position).main.temp - 273));
-        new DownloadImageTask(holder.icon).execute(OpenWeatherAPI.getIconURL(dataset.get(position).weather[0].icon));
+        holder.temp.setText(String.format("%s°", (int) dataset.get(position).first.main.temp - 273));
+
+        if (dataset.get(position).second == null) {
+            new DownloadImageTask(holder.icon, dataset.get(position).second)
+                    .execute(OpenWeatherAPI.getIconURL(dataset.get(position).first.weather[0].icon));
+        } else {
+            System.out.println("bitmap updated in position " + position);
+            holder.icon.setImageBitmap(dataset.get(position).second);
+        }
     }
 
     @Override

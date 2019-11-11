@@ -2,10 +2,12 @@ package com.example.android_api_test;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,17 +17,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 public class MainActivity extends Activity {
-
     TextView time, date, temp, minmaxtemp;
     ImageView weather_icon;
     RecyclerView forecast;
     Button refresh;
 
-    ArrayList <ForecastData.List> data;
+    ArrayList<Pair<ForecastData.List, Bitmap>> data;
     ForecastAdapter forecastAdapter;
 
     GPSTracker gpsTracker;
@@ -56,8 +56,12 @@ public class MainActivity extends Activity {
     Handler updateForecast = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             ForecastData forecastData = (ForecastData) msg.obj;
+            ArrayList<Pair<ForecastData.List, Bitmap>> temp = new ArrayList<>();
+            for (ForecastData.List list : forecastData.list) {
+                temp.add(new Pair<ForecastData.List, Bitmap>(list, null));
+            }
             data.clear();
-            data.addAll(Arrays.asList(forecastData.list));
+            data.addAll(temp);
             forecastAdapter.notifyDataSetChanged();
         }
     };

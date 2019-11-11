@@ -10,10 +10,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-    ImageView bmImage;
+    private ImageView bmImage;
+    private Bitmap bitmap;
 
     public DownloadImageTask(ImageView bmImage) {
         this.bmImage = bmImage;
+        this.bitmap = null;
+    }
+
+    public DownloadImageTask(ImageView bmImage, Bitmap bitmap) {
+        this.bmImage = bmImage;
+        this.bitmap = bitmap;
     }
 
     @Override
@@ -33,5 +40,6 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     protected void onPostExecute(Bitmap result) {
         bmImage.setImageBitmap(result);
+        bitmap = result;
     }
 }
