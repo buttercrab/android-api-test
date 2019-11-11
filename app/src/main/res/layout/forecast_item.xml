@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+    <TextView
+        android:id="@+id/forecast_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="13:00" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/forecast_weather_icon"
+        android:src="@drawable/clouds"/>
+    <TextView
+        android:id="@+id/forecast_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="13°" />
+
+</LinearLayout>

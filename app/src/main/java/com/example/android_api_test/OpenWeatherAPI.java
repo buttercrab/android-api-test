@@ -69,13 +69,13 @@ class ForecastData {
         String dt;
         Main main;
         Weather[] weather;
-        Clouds cLouds;
+        Clouds clouds;
         Wind wind;
         Sys sys;
         String dt_text;
 
         public Date getDate() throws ParseException {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat dateFormat = new SimpleDateFormat("HH");
             return dateFormat.parse(this.dt_text);
         }
 
