@@ -50,8 +50,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
             e.printStackTrace();
         }
         holder.temp.setText(String.format("%s°", (int) dataset.get(position).main.temp - 273));
-        holder.temp.setText(dataset.get(position).weather[0].icon);
-//        new DownloadImageTask(holder.icon).execute(OpenWeatherAPI.getIconURL(dataset.get(position).weather[0].icon), position + "");
         Glide.with(context)
                 .load(OpenWeatherAPI.getIconURL(dataset.get(position).weather[0].icon))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
