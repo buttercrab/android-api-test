@@ -14,6 +14,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -50,7 +54,11 @@ public class MainActivity extends Activity {
             temp.setText(String.format("%.1f°C", currentWeather.main.temp - 273.15));
             minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min - 273.15,
                     currentWeather.main.temp_max - 273.15));
-            new DownloadImageTask((ImageView) findViewById(R.id.weather_icon)).execute(OpenWeatherAPI.getIconURL(currentWeather.weather[0].icon));
+            Glide.with(getApplicationContext())
+                    .load(OpenWeatherAPI.getIconURL(currentWeather.weather[0].icon))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .apply(new RequestOptions().override(100, 100))
+                    .into((ImageView) findViewById(R.id.weather_icon));
             location.setText(currentWeather.name + ", " + currentWeather.sys.country);
         }
     };
@@ -75,7 +83,7 @@ public class MainActivity extends Activity {
         data = new ArrayList<>();
 
         LinearLayoutManager forecastManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        forecastAdapter = new ForecastAdapter(data);
+        forecastAdapter = new ForecastAdapter(data, this);
 
         time = findViewById(R.id.current_time);
         date = findViewById(R.id.current_date);

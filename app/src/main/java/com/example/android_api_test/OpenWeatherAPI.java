@@ -177,8 +177,6 @@ public class OpenWeatherAPI {
                             URL url = new URL("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
                             HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-                            System.out.println(url.toString());
-
                             con.setRequestMethod("GET");
                             BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
                             String data = br.readLine();

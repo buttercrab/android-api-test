@@ -1,5 +1,6 @@
 package com.example.android_api_test;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +10,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder> {
     private ArrayList<ForecastData.List> dataset;
+    Context context;
 
-    public ForecastAdapter(ArrayList<ForecastData.List> list) {
+    public ForecastAdapter(ArrayList<ForecastData.List> list, Context context) {
         dataset = list;
+        this.context = context;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ForecastViewHolder holder, int position) {
+        System.out.println(position + " change");
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm ");
             holder.time.setText(dateFormat.format(dataset.get(position).getDate()));
@@ -42,7 +50,13 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
             e.printStackTrace();
         }
         holder.temp.setText(String.format("%s°", (int) dataset.get(position).main.temp - 273));
-        new DownloadImageTask(holder.icon).execute(OpenWeatherAPI.getIconURL(dataset.get(position).weather[0].icon));
+        holder.temp.setText(dataset.get(position).weather[0].icon);
+//        new DownloadImageTask(holder.icon).execute(OpenWeatherAPI.getIconURL(dataset.get(position).weather[0].icon), position + "");
+        Glide.with(context)
+                .load(OpenWeatherAPI.getIconURL(dataset.get(position).weather[0].icon))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .apply(new RequestOptions().override(100, 100))
+                .into(holder.icon);
     }
 
     @NonNull
