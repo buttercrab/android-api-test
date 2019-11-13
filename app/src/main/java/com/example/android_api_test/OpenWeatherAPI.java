@@ -15,12 +15,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class CurrentWeatherData {
-    Detail[] weather;
+    Coord coord;
+    Weather[] weather;
+    String base;
     Main main;
+    int visibility;
     Wind wind;
     Cloud clouds;
+    float dt;
+    Sys sys;
+    int timezone;
+    int id;
+    String name;
+    int cod;
 
-    static class Detail {
+    static class Coord {
+        float lat;
+        float lon;
+    }
+
+    static class Weather {
         int id;
         String main;
         String description;
@@ -42,6 +56,14 @@ class CurrentWeatherData {
 
     static class Cloud {
         int all;
+    }
+
+    static class Sys {
+        int type;
+        int id;
+        String country;
+        int sunrise;
+        int sunset;
     }
 }
 
@@ -154,6 +176,8 @@ public class OpenWeatherAPI {
                         try {
                             URL url = new URL("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
                             HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+                            System.out.println(url.toString());
 
                             con.setRequestMethod("GET");
                             BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));

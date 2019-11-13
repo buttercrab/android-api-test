@@ -20,12 +20,12 @@ import java.util.Calendar;
 
 public class MainActivity extends Activity {
 
-    TextView time, date, temp, minmaxtemp;
+    TextView time, date, temp, minmaxtemp, location;
     ImageView weather_icon;
     RecyclerView forecast;
     Button refresh;
 
-    ArrayList <ForecastData.List> data;
+    ArrayList<ForecastData.List> data;
     ForecastAdapter forecastAdapter;
 
     GPSTracker gpsTracker;
@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
             minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min - 273.15,
                     currentWeather.main.temp_max - 273.15));
             new DownloadImageTask((ImageView) findViewById(R.id.weather_icon)).execute(OpenWeatherAPI.getIconURL(currentWeather.weather[0].icon));
+            location.setText(currentWeather.name + ", " + currentWeather.sys.country);
         }
     };
 
@@ -81,6 +82,7 @@ public class MainActivity extends Activity {
         refresh = findViewById(R.id.refresh);
         forecast = findViewById(R.id.weather_forecast);
         weather_icon = findViewById(R.id.weather_icon);
+        location = findViewById(R.id.location);
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
