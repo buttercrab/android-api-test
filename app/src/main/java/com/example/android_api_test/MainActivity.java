@@ -14,18 +14,22 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
 public class MainActivity extends Activity {
 
-    TextView time, date, temp, minmaxtemp;
+    TextView time, date, temp, minmaxtemp, location;
     ImageView weather_icon;
     RecyclerView forecast;
     Button refresh;
 
-    ArrayList <ForecastData.List> data;
+    ArrayList<ForecastData.List> data;
     ForecastAdapter forecastAdapter;
 
     GPSTracker gpsTracker;
@@ -44,16 +48,23 @@ public class MainActivity extends Activity {
 
     Handler updateWeather = new Handler(Looper.getMainLooper()) {
         @SuppressLint("DefaultLocale")
+        @Override
         public void handleMessage(Message msg) {
             CurrentWeatherData currentWeather = (CurrentWeatherData) msg.obj;
             temp.setText(String.format("%.1f°C", currentWeather.main.temp - 273.15));
             minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min - 273.15,
                     currentWeather.main.temp_max - 273.15));
-            new DownloadImageTask((ImageView) findViewById(R.id.weather_icon)).execute(OpenWeatherAPI.getIconURL(currentWeather.weather[0].icon));
+            Glide.with(getApplicationContext())
+                    .load(OpenWeatherAPI.getIconURL(currentWeather.weather[0].icon))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .apply(new RequestOptions().override(100, 100))
+                    .into((ImageView) findViewById(R.id.weather_icon));
+            location.setText(currentWeather.name + ", " + currentWeather.sys.country);
         }
     };
 
     Handler updateForecast = new Handler(Looper.getMainLooper()) {
+        @Override
         public void handleMessage(Message msg) {
             ForecastData forecastData = (ForecastData) msg.obj;
             data.clear();
@@ -72,7 +83,7 @@ public class MainActivity extends Activity {
         data = new ArrayList<>();
 
         LinearLayoutManager forecastManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        forecastAdapter = new ForecastAdapter(data);
+        forecastAdapter = new ForecastAdapter(data, this);
 
         time = findViewById(R.id.current_time);
         date = findViewById(R.id.current_date);
@@ -81,6 +92,7 @@ public class MainActivity extends Activity {
         refresh = findViewById(R.id.refresh);
         forecast = findViewById(R.id.weather_forecast);
         weather_icon = findViewById(R.id.weather_icon);
+        location = findViewById(R.id.location);
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
