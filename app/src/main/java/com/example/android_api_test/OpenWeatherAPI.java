@@ -1,17 +1,8 @@
 package com.example.android_api_test;
 
 import android.os.Handler;
-import android.os.Message;
 
-import com.google.gson.Gson;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class CurrentWeatherData {
@@ -97,8 +88,7 @@ class ForecastData {
         String dt_txt;
 
         public Date getDate() throws ParseException {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return dateFormat.parse(this.dt_txt);
+            // using simple date format
         }
 
         static class Main {
@@ -136,7 +126,7 @@ class ForecastData {
 
 public class OpenWeatherAPI {
 
-    private static String api_key = "b00bccf2cfe104ad03e1ce916fe12cab";
+    private static String api_key = ""; // put api key
 
     public static String getIconURL(String icon) {
         return "https://openweathermap.org/img/wn/" + icon + "@2x.png";
@@ -147,22 +137,7 @@ public class OpenWeatherAPI {
                 new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            URL url = new URL("https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
-                            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-                            con.setRequestMethod("GET");
-                            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                            String data = br.readLine();
-
-                            Gson gson = new Gson();
-                            final CurrentWeatherData weatherData = gson.fromJson(data, CurrentWeatherData.class);
-                            Message message = new Message();
-                            message.obj = weatherData;
-                            handler.sendMessage(message);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        // get data and parse json
                     }
                 }
         ).start();
@@ -173,22 +148,7 @@ public class OpenWeatherAPI {
                 new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            URL url = new URL("https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + api_key);
-                            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-                            con.setRequestMethod("GET");
-                            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                            String data = br.readLine();
-
-                            Gson gson = new Gson();
-                            final ForecastData forecastData = gson.fromJson(data, ForecastData.class);
-                            Message message = new Message();
-                            message.obj = forecastData;
-                            handler.sendMessage(message);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        // get data and parse json
                     }
                 }
         ).start();

@@ -14,10 +14,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -50,16 +46,7 @@ public class MainActivity extends Activity {
         @SuppressLint("DefaultLocale")
         @Override
         public void handleMessage(Message msg) {
-            CurrentWeatherData currentWeather = (CurrentWeatherData) msg.obj;
-            temp.setText(String.format("%.1f°C", currentWeather.main.temp - 273.15));
-            minmaxtemp.setText(String.format("%.1f°C/%.1f°C", currentWeather.main.temp_min - 273.15,
-                    currentWeather.main.temp_max - 273.15));
-            Glide.with(getApplicationContext())
-                    .load(OpenWeatherAPI.getIconURL(currentWeather.weather[0].icon))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .apply(new RequestOptions().override(100, 100))
-                    .into((ImageView) findViewById(R.id.weather_icon));
-            location.setText(currentWeather.name + ", " + currentWeather.sys.country);
+            // weather handler using glide
         }
     };
 
