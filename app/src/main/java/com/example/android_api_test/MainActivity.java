@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
 
     Handler updateWeather = new Handler(Looper.getMainLooper()) {
         @SuppressLint("DefaultLocale")
+        @Override
         public void handleMessage(Message msg) {
             CurrentWeatherData currentWeather = (CurrentWeatherData) msg.obj;
             temp.setText(String.format("%.1f°C", currentWeather.main.temp - 273.15));
@@ -55,6 +56,7 @@ public class MainActivity extends Activity {
     };
 
     Handler updateForecast = new Handler(Looper.getMainLooper()) {
+        @Override
         public void handleMessage(Message msg) {
             ForecastData forecastData = (ForecastData) msg.obj;
             data.clear();
